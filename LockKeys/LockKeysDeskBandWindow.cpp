@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "LockKeysDeskBandWindow.h"
-
+ 
 #define UPDATE_TIME_ID 1
 extern HINSTANCE g_Hinstance;
 

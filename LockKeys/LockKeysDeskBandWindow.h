@@ -2,7 +2,7 @@
 #include "atlwin.h"
 #include <Uxtheme.h>
 #include <Shobjidl.h>
-
+ 
 using namespace ATL;
 
 class CLockKeysDeskBandWindow :
