@@ -1,0 +1,35 @@
+// LockKeys.idl : LockKeys 的 IDL 源
+//
+
+// 此文件将由 MIDL 工具处理以
+// 产生类型库(LockKeys.tlb)和封送处理代码。
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(085C5FEB-A4FD-4BE8-886F-37034DBD2759),
+	dual,
+	nonextensible,
+	pointer_default(unique)
+]
+interface ILockKeysDeskBand : IDispatch{
+};
+[
+	uuid(E5D57E44-912C-4592-BF9F-D7B8DA6961D8),
+	version(1.0),
+]
+library LockKeysLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(D229A887-01C8-49D1-8CD1-9DC44B529C7E)		
+	]
+	coclass LockKeysDeskBand
+	{
+		[default] interface ILockKeysDeskBand;
+	};
+};
+
+import "shobjidl.idl";

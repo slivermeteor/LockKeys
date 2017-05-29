@@ -1,0 +1,16 @@
+HKCR
+{
+	NoRemove CLSID
+	{
+		ForceRemove {D229A887-01C8-49D1-8CD1-9DC44B529C7E} = s 'LockKeys'
+		{
+			ForceRemove Programmable
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			TypeLib = s '{E5D57E44-912C-4592-BF9F-D7B8DA6961D8}'
+			Version = s '1.0'
+		}
+	}
+}
