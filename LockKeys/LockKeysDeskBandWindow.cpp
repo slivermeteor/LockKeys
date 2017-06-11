@@ -65,10 +65,10 @@ BOOL CLockKeysDeskBandWindow::Create(HWND ParentWnd, LPUNKNOWN DeskBand, LPUNKNO
 		g_NumlkStatus = TRUE;
 
 	// 设置timer 
-	m_TimerId = SetTimer(UPDATE_TIME_ID, 500);
+	//m_TimerId = SetTimer(UPDATE_TIME_ID, 500);
 
 	// 挂钩全局键盘消息
-	//KeyBoardHook = SetWindowsHookEx(WH_KEYBOARD, (HOOKPROC)HookKeyboard, g_Hinstance, 0);
+	KeyBoardHook = SetWindowsHookEx(WH_KEYBOARD_LL, (HOOKPROC)HookKeyboard, g_Hinstance, 0);
 
 	return TRUE;
 }
@@ -213,37 +213,38 @@ LRESULT CLockKeysDeskBandWindow::OnPowerBroadcast(UINT uMsg, WPARAM wParam, LPAR
 
 LRESULT _stdcall HookKeyboard(int code, WPARAM wParam, LPARAM lParam)
 {
-	if (code == HC_ACTION)
+	KBDLLHOOKSTRUCT* KbDllHookStruct = (PKBDLLHOOKSTRUCT)lParam;
+	
+	if (wParam == WM_KEYDOWN)
 	{
-		ULONG TransitionState = (ULONG)lParam >> 31;
-		if (wParam == VK_CAPITAL)
+		DWORD KeyStatus = 0;
+		CWindow RefreshWin;
+		if (KbDllHookStruct->vkCode == VK_CAPITAL )
 		{
-			if (TransitionState == 1)
-			{
-				// DebugBreak()
+			KeyStatus = KbDllHookStruct->flags >> 7;
+			if (KeyStatus == 0)
+			{			
 				g_CapslkStatus = !g_CapslkStatus;
-				// 强制窗口完全刷新
-				if (DeskBandWindowWnd != NULL)
-				{
-					CWindow RefreshWin;
-					RefreshWin.Attach(DeskBandWindowWnd);
-					RefreshWin.Invalidate();
-				}
+
+				RefreshWin.Attach(DeskBandWindowWnd);
+				RefreshWin.Invalidate();
 			}
+
+			return CallNextHookEx(KeyBoardHook, code, wParam, lParam);
 		}
-		else if (wParam == VK_NUMLOCK)
+
+		if (KbDllHookStruct->vkCode == VK_NUMLOCK)
 		{
-			if (TransitionState == 1)
+			KeyStatus = KbDllHookStruct->flags >> 7;
+			if (KeyStatus == 0)
 			{
 				g_NumlkStatus = !g_NumlkStatus;
-				// 强制窗口完全刷新
-				if (DeskBandWindowWnd != NULL)
-				{
-					CWindow RefreshWin;
-					RefreshWin.Attach(DeskBandWindowWnd);
-					RefreshWin.Invalidate();
-				}
+
+				RefreshWin.Attach(DeskBandWindowWnd);
+				RefreshWin.Invalidate();
 			}
+
+			return CallNextHookEx(KeyBoardHook, code, wParam, lParam);
 		}
 	}
 
